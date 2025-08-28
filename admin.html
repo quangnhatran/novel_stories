@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin • Đăng truyện</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body data-page="admin">
+  <header class="topbar">
+    <a class="btn" href="index.html">← Về trang chủ</a>
+    <h1>✍️ Khu vực Admin</h1>
+    <button id="logoutBtn" class="btn subtle">Đăng xuất</button>
+  </header>
+  <main class="container">
+    <div id="adminGuard" class="warn">Đang kiểm tra quyền truy cập...</div>
+
+    <section id="createStory" class="card" hidden>
+      <h2>Thêm truyện mới</h2>
+      <label>Tiêu đề
+        <input id="storyTitle" required />
+      </label>
+      <label>Mô tả
+        <textarea id="storyDesc" rows="3"></textarea>
+      </label>
+      <label>Ảnh bìa (URL)
+        <input id="storyCoverUrl" type="text" placeholder="Dán link ảnh bìa vào đây" />
+      </label>
+
+      <button id="createStoryBtn" class="btn">Tạo truyện</button>
+    </section>
+
+    <section id="manageChapters" class="card" hidden>
+      <h2>Thêm chương</h2>
+      <label>Chọn truyện
+        <select id="storySelect"></select>
+      </label>
+      <label>Tiêu đề chương
+        <input id="chapterTitle" />
+      </label>
+      <label>Nội dung chương
+        <textarea id="chapterContent" rows="8"></textarea>
+      </label>
+      <button id="addChapterBtn" class="btn">Thêm chương</button>
+    </section>
+    <section id="manageStories" class="card" hidden>
+      <h2>Quản lý truyện</h2>
+      <div id="storyList"></div>
+      <!-- Form sửa truyện -->
+      <div id="editForm" hidden>
+        <h3>Sửa truyện</h3>
+        <label>Tiêu đề
+          <input id="editTitle" />
+        </label>
+        <label>Mô tả
+          <textarea id="editDesc" rows="3"></textarea>
+        </label>
+        <label>Nội dung
+          <textarea id="editContent" rows="8"></textarea>
+        </label>
+        <button id="saveEditBtn" class="btn">Lưu thay đổi</button>
+        <button id="cancelEditBtn" class="btn subtle">Hủy</button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script type="module" src="script.js"></script>
+</body>
+
+</html>

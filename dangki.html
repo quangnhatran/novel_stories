@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng ký</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="register">
+  <main class="auth">
+    <h1>Đăng ký</h1>
+    <form id="registerForm" class="card">
+      <label>Email
+        <input type="email" id="regEmail" required />
+      </label>
+      <label>Mật khẩu
+        <input type="password" id="regPassword" minlength="6" required />
+      </label>
+      <label>Biệt danh
+        <input type="text" id="regNickname" required />
+      </label>
+      <button class="btn" type="submit">Tạo tài khoản</button>
+      <p>Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+    </form>
+  </main>
+  <script type="module" src="script.js"></script>
+</body>
+</html>

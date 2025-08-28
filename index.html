@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trang Đăng Truyện</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="index">
+  <header class="topbar">
+    <div class="left">
+      <button id="themeToggle" title="Chế độ Sáng/Tối">🌓</button>
+      <select id="fontSelect" title="Font chữ">
+        <option value="system-ui">System</option>
+        <option value="serif">Serif</option>
+        <option value="monospace">Monospace</option>
+      </select>
+      <select id="fontSize" title="Cỡ chữ">
+        <option value="14px">14</option>
+        <option value="16px" selected>16</option>
+        <option value="18px">18</option>
+        <option value="20px">20</option>
+        <option value="22px">22</option>
+      </select>
+    </div>
+    <div class="center">
+      <input id="searchInput" placeholder="Tìm kiếm tên truyện..." />
+    </div>
+    <div class="right">
+      <a id="adminLink" class="btn" href="admin.html" hidden>Admin</a>
+      <div class="avatar-wrap">
+        <img id="userAvatar" class="avatar" alt="avatar" src="https://api.dicebear.com/9.x/thumbs/svg?seed=guest"/>
+        <div class="menu" id="userMenu">
+          <div id="userInfo">Khách</div>
+          <a href="login.html">Đăng nhập</a>
+          <a href="dangki.html">Đăng ký</a>
+          <button id="logoutBtn" class="link" style="display:none;">Đăng xuất</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>📚 Danh sách truyện</h1>
+    <div id="storiesList" class="grid"></div>
+
+    <div class="pager">
+      <button id="prevPage" disabled>« Trang trước</button>
+      <span id="pageInfo">Trang 1</span>
+      <button id="nextPage" disabled>Trang sau »</button>
+    </div>
+
+    <section id="storyDetail" class="drawer" hidden>
+      <button id="closeStory" class="close">✕</button>
+      <div class="story-head">
+        <img id="detailCover" class="cover" alt="cover"/>
+        <div>
+          <h2 id="detailTitle"></h2>
+          <p id="detailDesc"></p>
+        </div>
+      </div>
+      <div id="chaptersList" class="chapters"></div>
+    </section>
+  </main>
+  <footer><strong><a href="admin.html">Manager.com</a></strong></footer>
+
+  <script type="module" src="script.js"></script>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+  // Firebase config (giữ giống bên bạn đã setup)
+  const firebaseConfig = {
+     apiKey: "AIzaSyAAjjwH4z2HWyKOOflySU-l1fXaTR89LeU",
+  authDomain: "create-stories-d6b8e.firebaseapp.com",
+  projectId: "create-stories-d6b8e",
+  storageBucket: "create-stories-d6b8e.firebasestorage.app",
+  messagingSenderId: "530177556304",
+  appId: "1:530177556304:web:47bb327a9e049229a6f655"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const userInfo = document.getElementById("userInfo");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const loginLink = document.querySelector("#userMenu a[href='login.html']");
+  const registerLink = document.querySelector("#userMenu a[href='dangki.html']");
+
+  // Theo dõi trạng thái đăng nhập
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // Người dùng đã đăng nhập
+      const name = user.displayName || user.email.split("@")[0];
+      userInfo.textContent = name;
+      logoutBtn.style.display = "block";
+      loginLink.style.display = "none";
+      registerLink.style.display = "none";
+    } else {
+      // Chưa đăng nhập
+      userInfo.textContent = "Khách";
+      logoutBtn.style.display = "none";
+      loginLink.style.display = "block";
+      registerLink.style.display = "block";
+    }
+  });
+
+  // Xử lý đăng xuất
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    alert("Đã đăng xuất!");
+  });
+</script>
+
+</body>
+</html>
