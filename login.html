@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="login">
+  <main class="auth">
+    <h1>Đăng nhập</h1>
+    <form id="loginForm" class="card">
+      <label>Email
+        <input type="email" id="loginEmail" required />
+      </label>
+      <label>Mật khẩu
+        <input type="password" id="loginPassword" required  />
+      </label>
+      <button class="btn" type="submit">Đăng nhập</button>
+      <p>Chưa có tài khoản? <a href="dangki.html">Đăng ký</a></p>
+    </form>
+      <!-- Nơi load modal -->
+    <div id="modal-container"></div>
+  </main>
+    <script>
+    // Load modal từ alert.html
+    fetch('alert.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('modal-container').innerHTML = html;
+
+        // Gắn script modal.js sau khi modal đã load
+        const script = document.createElement("script");
+        script.src = "modal.js";
+        document.body.appendChild(script);
+      });
+  </script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>

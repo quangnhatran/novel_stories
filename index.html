@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trang Đăng Truyện</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="index">
+<header class="topbar">
+  <div class="left">
+    <button id="themeToggle" title="Chế độ Sáng/Tối">🌓</button>
+  </div>
+
+  <div class="center">
+    <input id="searchInput" placeholder="Tìm kiếm tên truyện..." />
+  </div>
+
+  <div class="right">
+    <div class="settings-wrap">
+      <button id="settingsBtn" class="btn">⚙️ </button>
+     <div class="menu" id="settingsMenu">
+  <label for="fontSelect">Font chữ:</label>
+  <select id="fontSelect">
+    <option value="system-ui">System</option>
+    <option value="serif">Serif</option>
+    <option value="monospace">Monospace</option>
+  </select>
+
+  <label for="fontSize">Cỡ chữ:</label>
+  <select id="fontSize">
+    <option value="14px">14</option>
+    <option value="16px" selected>16</option>
+    <option value="18px">18</option>
+    <option value="20px">20</option>
+    <option value="22px">22</option>
+  </select>
+
+  <hr>
+  <div id="userInfo">Khách</div>
+  <a href="login.html">Đăng nhập</a>
+  <a href="dangki.html">Đăng ký</a>
+  <button id="logoutBtn" class="link" style="display:none;">Đăng xuất</button>
+
+  <hr>
+  <!-- Liên hệ (dropdown) -->
+  <div class="contact">
+    <button id="contactToggle">Liên hệ ▼</button>
+    <div id="contactList" style="display:none; margin-left:10px;">
+      <a href="https://www.facebook.com/quangnha05" target="_blank">Facebook</a><br>
+      <a href="https://www.tiktok.com/@nhatran324" target="_blank">Tiktok</a><br>
+      <a href="https://zalo.me/0355870037" target="_blank">Zalo</a>
+    </div>
+  </div>
+
+  <a href="#" id="aboutBtn">About?</a>
+  <a href="#" id="feedbackLink">Feedback</a>
+  <button href="#" id="upgradeLink" >Nâng cấp Thành Viên</button>
+
+</div>
+</header>
+<div id="aboutModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <h2>About</h2>
+    <p>Phiên bản: 1.1.05<br>
+       Trang Web đọc truyện online.<br>
+       Tác giả: Nhóm Dev TQN.</p>
+    <button id="closeAbout">Đóng</button>
+  </div>
+</div>
+<div id="feedbackModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <h3>Gửi Feedback</h3>
+    <textarea id="feedbackText" placeholder="Nhập ý kiến của bạn..." rows="4"></textarea>
+    <div class="modal-actions">
+      <button id="sendZalo">Gửi qua Zalo</button>
+      <button id="sendEmail">Gửi qua Email</button>
+      <button id="closeFeedback">Đóng</button>
+    </div>
+  </div>
+</div>
+<div id="upgradeModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <h3>Nâng cấp  thành viên</h3>
+    <h4>Tính năng đang được phát triển.Vui lòng đợi</h4>
+    <button id="closeUpgrade">Đóng</button>
+    <div class="modal-actions"></div>
+  </div>
+</div>
+
+
+
+
+  <main class="container">
+    <h1>📚 Danh sách truyện</h1>
+    <div id="storiesList" class="grid"></div>
+
+    <div class="pager">
+      <button id="prevPage" disabled>« Trang trước</button>
+      <span id="pageInfo">Trang 1</span>
+      <button id="nextPage" disabled>Trang sau »</button>
+    </div>
+
+    <section id="storyDetail" class="drawer" hidden>
+  <div class="story-head-nav">
+    <button id="closeStory" class="close">✕</button>
+    <a href="index.html" class="btn subtle">🏠 Trang chủ</a>
+  </div>
+  <div class="story-head">
+    <img id="detailCover" class="cover" alt="cover"/>
+    <div>
+      <h2 id="detailTitle"></h2>
+      <p id="detailDesc"></p>
+    </div>
+  </div>
+  <div id="chaptersList" class="chapters"></div>
+  <a href="index.html" id="homeBtn" class="fab">🏠</a>
+
+</section>
+
+  </main>
+  <footer><strong><a href="admin.html">Manager.com</a></strong></footer>
+
+  <script type="module" src="script.js"></script>
+  <script>
+    // Toggle liên hệ
+document.getElementById("contactToggle").addEventListener("click", () => {
+  const list = document.getElementById("contactList");
+  list.style.display = list.style.display === "none" ? "block" : "none";
+});
+
+// About
+const aboutModal = document.getElementById("aboutModal");
+document.getElementById("aboutBtn").addEventListener("click", () => {
+  aboutModal.style.display = "flex";
+});
+document.getElementById("closeAbout").addEventListener("click", () => {
+  aboutModal.style.display = "none";
+});
+//Feedback
+const feedbackLink = document.getElementById("feedbackLink");
+const feedbackModal = document.getElementById("feedbackModal");
+const closeFeedback = document.getElementById("closeFeedback");
+const sendZalo = document.getElementById("sendZalo");
+const sendEmail = document.getElementById("sendEmail");
+const feedbackText = document.getElementById("feedbackText");
+
+feedbackLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  feedbackModal.style.display = "flex";
+});
+
+closeFeedback.addEventListener("click", () => {
+  feedbackModal.style.display = "none";
+});
+
+sendZalo.addEventListener("click", () => {
+  const text = encodeURIComponent(feedbackText.value);
+  window.open(`https://zalo.me/0355870037?text=${text}`, "_blank");
+});
+
+sendEmail.addEventListener("click", () => {
+  const text = encodeURIComponent(feedbackText.value);
+  window.open(
+    "https://mail.google.com/mail/?view=cm&fs=1&to=trranquangnha@gmail.com&su=Feedback&body=" + text,
+    "_blank"
+  );
+});
+//Updrade Level
+const upgradeModal = document.getElementById("upgradeModal");
+
+upgradeLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  upgradeModal.style.display = "flex"; // dùng đúng biến upgradeModal
+});
+
+closeUpgrade.addEventListener("click", () => {
+  upgradeModal.style.display = "none";
+});
+
+  </script>
+
+</body>
+</html>

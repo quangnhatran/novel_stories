@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng ký</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+</head>
+<body data-page="register">
+  <main class="auth">
+    <h1>Đăng ký</h1>
+    <form id="registerForm" class="card">
+      <label>Email
+        <input type="email" id="regEmail" required />
+      </label>
+      <label>Mật khẩu
+        <input type="password" id="regPassword" minlength="6" required />
+      </label>
+      <label>Biệt danh
+        <input type="text" id="regNickname" required />
+      </label>
+      <button class="btn" type="submit">Tạo tài khoản</button>
+      <p>Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+    </form>
+
+    <!-- Nơi load modal -->
+    <div id="modal-container"></div>
+  </main>
+
+  <script>
+    // Load modal từ alert.html
+    fetch('alert.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('modal-container').innerHTML = html;
+
+        // Gắn script modal.js sau khi modal đã load
+        const script = document.createElement("script");
+        script.src = "modal.js";
+        document.body.appendChild(script);
+      });
+  </script>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
