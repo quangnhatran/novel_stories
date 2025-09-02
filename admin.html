@@ -6,6 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin • Đăng truyện</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .modal[hidden] {
+  display: none !important;
+}
+
+  </style>
 </head>
 
 <body data-page="admin">
@@ -18,19 +24,35 @@
     <div id="adminGuard" class="warn">Đang kiểm tra quyền truy cập...</div>
 
     <!-- Tạo truyện -->
-    <section id="createStory" class="card" hidden>
-      <h2>Thêm truyện mới</h2>
-      <label>Tiêu đề
-        <input id="storyTitle" required />
-      </label>
-      <label>Mô tả
-        <textarea id="storyDesc" rows="3"></textarea>
-      </label>
-      <label>Ảnh bìa (URL)
-        <input id="storyCoverUrl" type="text" placeholder="Dán link ảnh bìa vào đây" />
-      </label>
-      <button id="createStoryBtn" class="btn">Tạo truyện</button>
-    </section>
+<section id="createStory" class="card" hidden>
+  <h2>Thêm truyện mới</h2>
+
+  <!-- Link nguồn
+  <label>Link truyện (nguồn)
+    <input id="storyLink" type="url" placeholder="Dán link truyện ở đây" />
+  </label>
+  <button id="fetchDataBtn" class="btn subtle">📥 Lấy dữ liệu từ link</button> -->
+  <input type="text" id="storyLink" placeholder="Link gốc (tùy chọn)">
+
+
+  <!-- Tiêu đề -->
+  <label>Tiêu đề
+    <input id="storyTitle" required />
+  </label>
+
+  <!-- Mô tả -->
+  <label>Mô tả
+    <textarea id="storyDesc" rows="3"></textarea>
+  </label>
+
+  <!-- Ảnh bìa -->
+  <label>Ảnh bìa (URL)
+    <input id="storyCoverUrl" type="text" placeholder="Dán link ảnh bìa vào đây" />
+  </label>
+
+  <button id="createStoryBtn" class="btn">Tạo truyện</button>
+</section>
+
 
     <!-- Thêm chương -->
     <section id="manageChapters" class="card" hidden>
@@ -67,8 +89,67 @@
       <button id="cancelChapterEditBtn" class="btn subtle">Hủy</button>
 
     </section>
+    <dialog id="updateSuccessModal">
+  <h3>✅ Cập nhật thành công!</h3>
+  <p>Chương đã được lưu vào cơ sở dữ liệu.</p>
+  <button id="closeModalBtn" class="btn">Đóng</button>
+</dialog>
+<!-- Modal thông báo -->
+<div id="modalBox" class="modal hidden">
+  <div class="modal-content">
+    <p id="modalMessage"></p>
+    <button id="modalClose">Đóng</button>
+  </div>
+</div>
+
+<!-- Modal xác nhận -->
+<div id="confirmBox" class="modal hidden">
+  <div class="modal-content">
+    <p id="confirmMessage"></p>
+    <div class="actions">
+      <button id="confirmYes">OK</button>
+      <button id="confirmNo">Hủy</button>
+    </div>
+  </div>
+</div>
+
+
+
   </main>
+
   <script type="module" src="script.js"></script>
+    <script>
+   function showModal(message) {
+  const modal = document.getElementById("modalBox");
+  document.getElementById("modalMessage").textContent = message;
+  modal.classList.remove("hidden");
+  document.getElementById("modalClose").onclick = () => {
+    modal.classList.add("hidden");
+  };
+}
+
+function confirmModal(message) {
+  return new Promise((resolve) => {
+    const modal = document.getElementById("confirmBox");
+    document.getElementById("confirmMessage").textContent = message;
+    modal.classList.remove("hidden");
+
+    const yesBtn = document.getElementById("confirmYes");
+    const noBtn = document.getElementById("confirmNo");
+
+    yesBtn.onclick = () => {
+      modal.classList.add("hidden");
+      resolve(true);
+    };
+    noBtn.onclick = () => {
+      modal.classList.add("hidden");
+      resolve(false);
+    };
+  });
+}
+
+
+  </script>
 
 </body>
 
