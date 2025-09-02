@@ -5,6 +5,11 @@
   --card:#15151a;
   --border:#2a2a32;
   --brand:#7c5cff;
+
+  /* thêm cho menu */
+  --menu-bg: #2c2c2c;
+  --menu-text: #f1f1f1;
+  --menu-border: #444;
 }
 
 /* Light theme */
@@ -15,6 +20,51 @@ html[data-theme="light"] {
   --card:#f6f6f8;
   --border:#e6e6ef;
   --brand:#6b5cff;
+
+  /* menu trong light */
+  --menu-bg: #ffffff;
+  --menu-text: #161618;
+  --menu-border: #ddd;
+}
+.menu {
+  color: var(--menu-text);
+}
+html[data-theme="light"] .menu {
+  color: var(--menu-text);
+}
+#settingsBtn {
+  color: var(--fg);
+  transition: color 0.2s;
+}
+html[data-theme="light"] #settingsBtn {
+  color: #161618;
+}
+html:not([data-theme="light"]) #settingsBtn {
+  color: #e7e7ea;
+}
+#settingsMenu {
+  color: var(--fg); /* Sử dụng màu chữ chính của theme */
+  background: var(--card); /* Nền theo theme */
+  border: 1px solid var(--border);
+}
+html[data-theme="light"] #settingsMenu {
+  color: #161618;
+  background: #f6f6f8;
+  border: 1px solid #e6e6ef;
+}
+#settingsMenu a,
+#settingsMenu button,
+#settingsMenu select,
+#settingsMenu label {
+  color: inherit; /* Luôn lấy màu chữ từ #settingsMenu */
+  background: linear-gradient(180deg, rgba(124,92,255,0.03), transparent);
+}
+html[data-theme="light"] #settingsMenu a,
+html[data-theme="light"] #settingsMenu button,
+html[data-theme="light"] #settingsMenu select,
+html[data-theme="light"] #settingsMenu label {
+  color: #161618;
+  background: linear-gradient(180deg, rgba(124,92,255,0.03), transparent);
 }
 
 /* Reset & Base */
@@ -74,32 +124,36 @@ input, textarea, select { width:100%; }
 .card { background:var(--card); padding:16px; border:1px solid var(--border); border-radius:16px; }
 .warn { padding:12px; border:1px dashed var(--border); border-radius:12px; }
 
-/* Grid Layout */
-.grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
-  gap:16px;
+
+
+#storiesList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 16px;
 }
 
-/* Story Card */
 .story-card {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px; overflow:hidden;
-  display:flex; flex-direction:column;
-  box-shadow: 0 4px 24px rgba(60,60,90,0.12);
-  transition: transform 0.25s, box-shadow 0.25s;
-   max-width: 220px;   /* kích thước giống 1 cuốn ebook */
-  margin: 0 auto;     /* căn giữa */
+  background: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
+
 .story-card img {
   width: 100%;
-  aspect-ratio: 3 / 4;   /* tỉ lệ bìa sách */
-  object-fit: cover;     /* cắt ảnh cho vừa khung */
-  border-radius: 12px;   /* bo góc mềm mại */
-  max-height: 250px;     /* giới hạn chiều cao tối đa */
+  height: 200px;
+  object-fit: cover;
 }
-.story-card .meta { padding:12px; display:flex; flex-direction:column; gap:6px; }
+
+.story-card .meta {
+  padding: 10px;
+  text-align: center;
+}
+
 
 .badge { font-size:12px; color:var(--muted); }
 .pager { display:flex; gap:10px; align-items:center; justify-content:center; margin:20px 0; }
@@ -392,7 +446,12 @@ html[data-theme="light"] #appModal > div {
     padding: 6px 8px;
     border-radius: 8px;
   }
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+
+
 #settingsMenu a,
 #settingsMenu button,
 #settingsMenu select,
@@ -441,6 +500,11 @@ html[data-theme="light"] #appModal > div {
   background: rgba(255,255,255,0.02);
   pointer-events: none;
 }
+#iplogin, #ipCurrent {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--muted);
+}
 
 /* respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
@@ -467,14 +531,27 @@ html[data-theme="light"] #appModal > div {
     border-radius: 8px;
   }
 }
+@media (max-width: 600px) {
+  #storiesList {
+    grid-template-columns: repeat(2, 1fr); /* mobile = 2 cột */
+    gap: 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+  #storiesList {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
   
 .menu {
   display: none;
   position: absolute;
   top: 40px;
   right: 0;
-  background: var(--bg, white);
-  border: 1px solid #ccc;
+  background: var(--menu-bg);
+  border: 1px solid var(--menu-border);
   padding: 8px;
   border-radius: 6px;
   z-index: 100;
@@ -482,15 +559,11 @@ html[data-theme="light"] #appModal > div {
 .menu.show {
   display: block;
 }
-.menu select {
-  background-color: #2c2c2c; /* Nền giống menu */
-  color: #f1f1f1;           /* Chữ sáng */
-  border: 1px solid #444;
-}
-
+.menu select,
 .menu select option {
-  background-color: #2c2c2c; /* Nền option */
-  color: #f1f1f1;           /* Chữ option */
+  background-color: var(--menu-bg);
+  color: var(--menu-text);
+  border: 1px solid var(--menu-border);
 }
 .modal {
   position: fixed;
@@ -556,3 +629,263 @@ html[data-theme="light"] #appModal > div {
   .grid { grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); }
 }
 
+
+/* Modal success styles (siêu đẹp, nhẹ 3D + animation) */
+.modal-temp { gap: 20px; padding: 28px; }
+.modal-temp .modal-content.modal-success {
+  width: 460px;
+  max-width: 92%;
+  padding: 22px;
+  border-radius: 14px;
+  text-align: center;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--card) 86%, #7c5cff 6%), var(--card));
+  box-shadow: 0 28px 70px rgba(12,8,30,0.55), 0 6px 18px rgba(124,92,255,0.06);
+  border: 1px solid rgba(255,255,255,0.04);
+  transform-origin: center;
+  animation: modalPop 420ms cubic-bezier(.2,.9,.25,1) both;
+  overflow: visible;
+}
+
+.modal-temp .success-hero {
+  width: 84px;
+  height: 84px;
+  margin: 6px auto 8px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  background: radial-gradient(circle at 30% 20%, #fff8 0%, rgba(255,255,255,0.06) 10%, transparent 40%),
+              linear-gradient(135deg, #ffd27a 0%, #ff9d6b 40%, #7c5cff 100%);
+  color: #2b102b;
+  box-shadow: 0 10px 30px rgba(124,92,255,0.18), inset 0 2px 8px rgba(255,255,255,0.06);
+  transform: translateZ(20px);
+  animation: heroPulse 1400ms ease-in-out infinite;
+}
+
+/* Text */
+.modal-temp h3 { margin: 8px 0 4px; color: var(--fg); font-size: 1.15rem; letter-spacing: 0.01em; }
+.modal-temp .muted { color: var(--muted); margin-bottom: 12px; }
+
+/* Actions */
+.modal-temp .modal-actions { display:flex; gap:10px; justify-content:center; margin-top:8px; }
+.modal-temp .modal-actions .btn { padding: 8px 14px; }
+.modal-temp .modal-actions .btn.subtle { background: transparent; border: 1px solid rgba(255,255,255,0.06); color: var(--fg); }
+
+/* small close icon */
+.modal-temp .modal-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: transform .18s, color .18s, background .18s;
+}
+.modal-temp .modal-close:hover { transform: translateY(-3px); color: var(--fg); background: rgba(124,92,255,0.04); }
+
+/* leave/fade animations */
+.modal-temp .modal-content.modal-leave { animation: modalOut 260ms ease both; }
+.modal-temp.overlay-fadeout { animation: overlayFadeOut 260ms ease both; }
+
+@keyframes modalPop { /* reuse or override if already present */
+  0% { transform: translateY(20px) rotateX(6deg) scale(.98); opacity: 0; filter: blur(6px); }
+  60% { transform: translateY(-8px) rotateX(-3deg) scale(1.02); opacity: 1; filter: none; }
+  100% { transform: translateY(0) rotateX(0) scale(1); opacity: 1; }
+}
+@keyframes heroPulse {
+  0% { transform: translateZ(18px) scale(1); filter: drop-shadow(0 6px 18px rgba(124,92,255,0.10)); }
+  50% { transform: translateZ(24px) scale(1.04); filter: drop-shadow(0 18px 40px rgba(124,92,255,0.14)); }
+  100% { transform: translateZ(18px) scale(1); }
+}
+@keyframes modalOut {
+  to { transform: translateY(10px) scale(.98); opacity: 0; filter: blur(6px); }
+}
+@keyframes overlayFadeOut {
+  to { opacity: 0; transform: none; }
+}
+
+/* respect reduced motion & mobile */
+@media (prefers-reduced-motion: reduce) {
+  .modal-temp .modal-content, .modal-temp .success-hero { animation: none; transition: none; }
+}
+@media (max-width: 520px) {
+  .modal-temp .modal-content { padding:16px; border-radius:12px; width: 92%; }
+  .modal-temp .success-hero { width:64px; height:64px; font-size:28px; }
+}
+
+
+
+/* Modal success styles (siêu đẹp, nhẹ 3D + animation) */
+.modal-temp { gap: 20px; padding: 28px; }
+.modal-temp .modal-content.modal-success {
+  width: 460px;
+  max-width: 92%;
+  padding: 22px;
+  border-radius: 14px;
+  text-align: center;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--card) 86%, #7c5cff 6%), var(--card));
+  box-shadow: 0 28px 70px rgba(12,8,30,0.55), 0 6px 18px rgba(124,92,255,0.06);
+  border: 1px solid rgba(255,255,255,0.04);
+  transform-origin: center;
+  animation: modalPop 420ms cubic-bezier(.2,.9,.25,1) both;
+  overflow: visible;
+}
+
+.modal-temp .success-hero {
+  width: 84px;
+  height: 84px;
+  margin: 6px auto 8px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  background: radial-gradient(circle at 30% 20%, #fff8 0%, rgba(255,255,255,0.06) 10%, transparent 40%),
+              linear-gradient(135deg, #ffd27a 0%, #ff9d6b 40%, #7c5cff 100%);
+  color: #2b102b;
+  box-shadow: 0 10px 30px rgba(124,92,255,0.18), inset 0 2px 8px rgba(255,255,255,0.06);
+  transform: translateZ(20px);
+  animation: heroPulse 1400ms ease-in-out infinite;
+}
+
+/* Text */
+.modal-temp h3 { margin: 8px 0 4px; color: var(--fg); font-size: 1.15rem; letter-spacing: 0.01em; }
+.modal-temp .muted { color: var(--muted); margin-bottom: 12px; }
+
+/* Actions */
+.modal-temp .modal-actions { display:flex; gap:10px; justify-content:center; margin-top:8px; }
+.modal-temp .modal-actions .btn { padding: 8px 14px; }
+.modal-temp .modal-actions .btn.subtle { background: transparent; border: 1px solid rgba(255,255,255,0.06); color: var(--fg); }
+
+/* small close icon */
+.modal-temp .modal-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: transform .18s, color .18s, background .18s;
+}
+.modal-temp .modal-close:hover { transform: translateY(-3px); color: var(--fg); background: rgba(124,92,255,0.04); }
+
+/* leave/fade animations */
+.modal-temp .modal-content.modal-leave { animation: modalOut 260ms ease both; }
+.modal-temp.overlay-fadeout { animation: overlayFadeOut 260ms ease both; }
+
+#accountBtn {
+  background: none;
+  border: none;
+  color: var(--fg);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.18s, color 0.18s;
+}
+#accountBtn:hover,
+#accountBtn:focus {
+  background: linear-gradient(90deg, rgba(124,92,255,0.08), transparent);
+  color: var(--brand);
+  outline: none;
+}
+html[data-theme="light"] #accountBtn {
+  color: #161618;
+}
+#registerLink, #loginLink {
+  display: inline-block;
+  color: var(--brand);
+  background: transparent;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: color 0.18s, background 0.18s;
+}
+#registerLink:hover, #loginLink:hover,
+#registerLink:focus, #loginLink:focus {
+  color: #fff;
+  background: var(--brand);
+  outline: none;
+}
+html[data-theme="light"] #registerLink,
+html[data-theme="light"] #loginLink {
+  color: #6b5cff;
+  background: transparent;
+}
+html[data-theme="light"] #registerLink:hover,
+html[data-theme="light"] #loginLink:hover,
+html[data-theme="light"] #registerLink:focus,
+html[data-theme="light"] #loginLink:focus {
+  color: #fff;
+  background: #6b5cff;
+}
+/* Đặt registerLink và loginLink cùng dòng, căn giữa nếu cần */
+#registerLink, #loginLink {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+#registerLink:last-child, #loginLink:last-child {
+  margin-right: 0;
+}
+
+/* Nếu muốn căn giữa cả cụm */
+.auth-links {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@keyframes modalPop { /* reuse or override if already present */
+  0% { transform: translateY(20px) rotateX(6deg) scale(.98); opacity: 0; filter: blur(6px); }
+  60% { transform: translateY(-8px) rotateX(-3deg) scale(1.02); opacity: 1; filter: none; }
+  100% { transform: translateY(0) rotateX(0) scale(1); opacity: 1; }
+}
+@keyframes heroPulse {
+  0% { transform: translateZ(18px) scale(1); filter: drop-shadow(0 6px 18px rgba(124,92,255,0.10)); }
+  50% { transform: translateZ(24px) scale(1.04); filter: drop-shadow(0 18px 40px rgba(124,92,255,0.14)); }
+  100% { transform: translateZ(18px) scale(1); }
+}
+@keyframes modalOut {
+  to { transform: translateY(10px) scale(.98); opacity: 0; filter: blur(6px); }
+}
+@keyframes overlayFadeOut {
+  to { opacity: 0; transform: none; }
+}
+
+/* respect reduced motion & mobile */
+@media (prefers-reduced-motion: reduce) {
+  .modal-temp .modal-content, .modal-temp .success-hero { animation: none; transition: none; }
+}
+@media (max-width: 520px) {
+  .modal-temp .modal-content { padding:16px; border-radius:12px; width: 92%; }
+  .modal-temp .success-hero { width:64px; height:64px; font-size:28px; }
+}
