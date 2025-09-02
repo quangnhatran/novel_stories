@@ -31,13 +31,29 @@ body {
 .container { max-width:1100px; margin:24px auto; padding:0 16px; }
 
 .topbar {
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px; padding:10px 16px; border-bottom:1px solid var(--border);
-  position:sticky; top:0; background:var(--bg); z-index:10;
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* trái - giữa - phải */
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 10;
 }
-.topbar .left, .topbar .center, .topbar .right {
-  display:flex; align-items:center; gap:8px;
+
+.topbar .left {
+  justify-self: start; /* ép sát trái */
 }
+
+.topbar .center {
+  justify-self: center; /* ô search ở giữa */
+}
+
+.topbar .right {
+  justify-self: end; /* ép sát phải */
+}
+
 
 /* Form Elements */
 input, textarea, select, button {
@@ -345,6 +361,7 @@ html[data-theme="light"] #appModal > div {
   pointer-events: none;
 }
 
+
 /* respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   #settingsMenu a,
@@ -370,8 +387,6 @@ html[data-theme="light"] #appModal > div {
     border-radius: 8px;
   }
 }
-
-
 #settingsMenu a,
 #settingsMenu button,
 #settingsMenu select,
@@ -534,3 +549,4 @@ html[data-theme="light"] #appModal > div {
 @media (min-width:1024px) {
   .grid { grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); }
 }
+
