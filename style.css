@@ -89,9 +89,15 @@ input, textarea, select { width:100%; }
   display:flex; flex-direction:column;
   box-shadow: 0 4px 24px rgba(60,60,90,0.12);
   transition: transform 0.25s, box-shadow 0.25s;
+   max-width: 220px;   /* kích thước giống 1 cuốn ebook */
+  margin: 0 auto;     /* căn giữa */
 }
 .story-card img {
-  width:100%; aspect-ratio:3/4; object-fit:cover;
+  width: 100%;
+  aspect-ratio: 3 / 4;   /* tỉ lệ bìa sách */
+  object-fit: cover;     /* cắt ảnh cho vừa khung */
+  border-radius: 12px;   /* bo góc mềm mại */
+  max-height: 250px;     /* giới hạn chiều cao tối đa */
 }
 .story-card .meta { padding:12px; display:flex; flex-direction:column; gap:6px; }
 
