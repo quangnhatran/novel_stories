@@ -134,7 +134,17 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-if ($("#logoutBtn")) $("#logoutBtn").addEventListener("click", async () => { await signOut(auth); window.location.href = "index.html"; });
+if ($("#logoutBtn")) {
+  $("#logoutBtn").addEventListener("click", async () => {
+    await signOut(auth);
+    showModal({
+      title: "Đăng xuất",
+      message: "Bạn đã đăng xuất thành công!"
+    });
+    setTimeout(() => window.location.href = "index.html", 1500);
+  });
+}
+
 
 /** Page routers */
 const page = document.body.dataset.page;
@@ -442,6 +452,7 @@ function isAdmin(user) {
   return user && ADMIN_EMAILS.includes(user.email);
 }
 
+
 // Hàm bảo vệ trang admin.html
 async function ensureAdmin(user) {
   const guard = document.getElementById("adminGuard");
@@ -533,7 +544,7 @@ async function handleCreateStory() {
     }
 
     // load lại danh sách chapter (rỗng lúc mới tạo)
-    await loadChapters(docRef.id);
+    // await loadChapters(docRef.id);
 
   } catch (err) {
     toast("Lỗi tạo truyện: " + err.message);
@@ -660,7 +671,17 @@ document.getElementById("chapterSelect").addEventListener("change", async (e) =>
   document.getElementById("editChapterContent").value = data.content || "";
 });
 
-// Nút Lưu thay đổi chương
+// Gắn event cho nút đóng modal
+const modal = document.getElementById("updateSuccessModal");
+const closeModalBtn = document.getElementById("closeModalBtn");
+
+if (closeModalBtn) {
+  closeModalBtn.addEventListener("click", () => {
+    modal.close();
+  });
+}
+
+// Trong đoạn saveChapterEditBtn:
 document.getElementById("saveChapterEditBtn").addEventListener("click", async () => {
   const storyId = document.getElementById("storySelectEdit").value;
   const chapterId = document.getElementById("chapterSelect").value;
@@ -684,9 +705,13 @@ document.getElementById("saveChapterEditBtn").addEventListener("click", async ()
       content: newContent
     });
 
-    toast("✅ Đã cập nhật chương");
+    
 
-    // reload danh sách chương nếu có listener "change"
+    // Show modal
+    if (modal && typeof modal.showModal === "function") {
+      modal.showModal();
+    }
+
     document.getElementById("storySelectEdit").dispatchEvent(new Event("change"));
 
   } catch (err) {
@@ -725,16 +750,18 @@ document.getElementById("deleteBtn").addEventListener("click", async () => {
   try {
     if (chapterId) {
       // Xóa chương
-      if (!confirm("Bạn có chắc muốn xóa chương này?")) return;
+     if (!(await confirmModal("Bạn có chắc muốn xóa chương này?"))) return;
+
       await deleteDoc(doc(db, "stories", storyId, "chapters", chapterId));
-      toast("Đã xóa chương");
+      showModal("Đã xóa chương");
 
       // Reload lại danh sách chương
       document.getElementById("storySelectEdit").dispatchEvent(new Event("change"));
     } else {
       // Xóa luôn cả truyện + các chương con
       // Xóa luôn cả truyện + các chương con
-      if (!confirm("Bạn có chắc muốn xóa toàn bộ truyện này (kèm tất cả chương)?")) return;
+      if (!(await confirmModal("Bạn có chắc muốn xóa truyện này?"))) return;
+
 
       // Xóa tất cả chapters trước
       const chaptersSnap = await getDocs(collection(db, "stories", storyId, "chapters"));
@@ -744,7 +771,7 @@ document.getElementById("deleteBtn").addEventListener("click", async () => {
 
       // Xoá truyện
       await deleteDoc(doc(db, "stories", storyId));
-      toast("Đã xóa truyện và toàn bộ chương");
+      showModal("Đã xóa truyện và toàn bộ chương");
 
       // ✅ Refresh cả 3 nơi: select thêm chương, select sửa chương, và danh sách truyện
       await Promise.all([
@@ -762,7 +789,7 @@ document.getElementById("deleteBtn").addEventListener("click", async () => {
     }
   } catch (err) {
     console.error("Lỗi khi xóa:", err);
-    toast("Xóa thất bại, thử lại sau");
+    showModal("Xóa thất bại, thử lại sau");
   }
 });
 
