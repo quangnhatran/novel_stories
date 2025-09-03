@@ -69,26 +69,48 @@
       <button id="addChapterBtn" class="btn">Thêm chương</button>
     </section>
     <hr>
-    <!-- Sửa chương -->
-    <section id="editChapterSection" class="card" >
-      <h2>Quản Lý Truyện</h2>
-      <label>Chọn truyện
-        <select id="storySelectEdit"></select>
-      </label>
-      <label>Chọn chương
-        <select id="chapterSelect"></select>
-      </label>
-      <label>Tiêu đề chương
-        <input id="editChapterTitle" />
-      </label>
-      <label>Nội dung chương
-        <textarea id="editChapterContent" rows="8"></textarea>
-      </label>
-      <button id="saveChapterEditBtn" class="btn">Lưu thay đổi</button>
-      <button id="deleteBtn" class="btn btn-danger">🗑️ Xóa</button>
-      <button id="cancelChapterEditBtn" class="btn subtle">Hủy</button>
+  
+<hr>
 
-    </section>
+   <!-- Danh sách truyện -->
+<section id="manageStories" class="card" hidden>
+  <h2>Danh sách truyện</h2>
+  <div id="storyList">
+  </div>
+</section>
+<!-- Gửi thư -->
+<section id="sendMailSection" class="card">
+  <h2>📩 Gửi thư đến người dùng</h2>
+  <label>Tiêu đề
+    <input id="mailSubject" type="text" placeholder="Nhập tiêu đề..." />
+  </label>
+  <label>Nội dung
+    <textarea id="mailBody" rows="5" placeholder="Nhập nội dung thư..."></textarea>
+  </label>
+  <button id="sendMailBtn" class="btn">Gửi thư</button>
+</section>
+  
+<hr>
+<!-- Sửa chương -->
+<section id="editChapterSection" class="card" hidden>
+  <h2>Quản Lý Truyện</h2>
+  <label>Chọn truyện
+    <select id="storySelectEdit"></select>
+  </label>
+  <label>Chọn chương
+    <select id="chapterSelect"></select>
+  </label>
+  <label>Tiêu đề chương
+    <input id="editChapterTitle" />
+  </label>
+  <label>Nội dung chương
+    <textarea id="editChapterContent" rows="8"></textarea>
+  </label>
+  <button id="saveChapterEditBtn" class="btn">Lưu thay đổi</button>
+  <button id="deleteBtn" class="btn btn-danger">🗑️ Xóa</button>
+  <button id="cancelChapterEditBtn" class="btn subtle">Hủy</button>
+</section>
+
     <dialog id="updateSuccessModal">
   <h3>✅ Cập nhật thành công!</h3>
   <p>Chương đã được lưu vào cơ sở dữ liệu.</p>
@@ -112,6 +134,14 @@
     </div>
   </div>
 </div>
+<!-- Modal cảnh báo quyền truy cập -->
+<div id="noAccessModal" class="modal" hidden>
+  <div class="modal-content">
+    <h3>Truy cập bị từ chối</h3>
+    <p>Bạn không có quyền truy cập. Liên hệ Admin để được cấp quyền.</p>
+    <button id="closeNoAccessModal">OK</button>
+  </div>
+</div>
 
 
 
@@ -119,6 +149,8 @@
 
   <script type="module" src="script.js"></script>
     <script>
+
+
    function showModal(message) {
   const modal = document.getElementById("modalBox");
   document.getElementById("modalMessage").textContent = message;
