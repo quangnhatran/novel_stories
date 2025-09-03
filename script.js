@@ -277,9 +277,49 @@ function initIndex() {
     // render
     docs.forEach(d => renderStoryCard(d.id, d));
     pageInfo.textContent = `Trang ${currentPage}`;
+
+    // --- Hòm thư ---
+const mailModal = $("#mailModal");
+const mailList = $("#mailList");
+const mailBtn = $("#mailBtn");   // nút mở hòm thư ở header hay sidebar
+const closeMail = $("#closeMail");
+
+async function loadMails() {
+  mailList.innerHTML = "<p>Đang tải...</p>";
+  const snap = await getDocs(query(
+    collection(db, "mails"),
+    orderBy("createdAt", "desc")
+  ));
+  if (snap.empty) {
+    mailList.innerHTML = "<p>(Chưa có thư nào)</p>";
+    return;
   }
+  mailList.innerHTML = "";
+  snap.forEach(docSnap => {
+    const data = docSnap.data();
+    const div = document.createElement("div");
+    div.className = "mail-item";
+    div.innerHTML = `
+      <h4>${data.subject}</h4>
+      <small>${new Date(data.createdAt).toLocaleString()}</small>
+      <p>${data.body}</p>
+      <hr>
+    `;
+    mailList.appendChild(div);
+  });
+}
+
+mailBtn?.addEventListener("click", async () => {
+  await loadMails();
+  mailModal.hidden = false;
+});
+
+closeMail?.addEventListener("click", () => {
+  mailModal.hidden = true;
+});
 
 
+  }
   function renderStoryCard(id, data) {
     const card = document.createElement("div");
     card.className = "story-card";
@@ -457,38 +497,56 @@ function isAdmin(user) {
 async function ensureAdmin(user) {
   const guard = document.getElementById("adminGuard");
   if (!isAdmin(user)) {
-    guard.textContent = "Bạn không có quyền truy cập. Liên hệ Admin để được cấp quyền.";
+    const modal = document.getElementById("noAccessModal");
+    if (modal) modal.hidden = false;
+
+    // Tự động chuyển về trang chính sau 1 giây
     setTimeout(() => {
-      window.location.href = "index.html"; // quay lại trang chính
-    }, 2000);
+      window.location.href = "index.html";
+    }, 1000);
+
     return false;
   } else {
     guard.classList.add("hidden");
-    document.getElementById("createStory").hidden = false;
-    document.getElementById("manageChapters").hidden = false;
-    document.getElementById("manageStories").hidden = false;
+    const cs = document.getElementById("createStory");
+    const mc = document.getElementById("manageChapters");
+    const ms = document.getElementById("manageStories");
+    const ec = document.getElementById("editChapterSection");
+
+    if (ec) ec.hidden = true; // đảm bảo không bật sẵn
+    if (cs) cs.hidden = false;
+    if (mc) mc.hidden = false;
+    if (ms) ms.hidden = false;
+
     await loadStoryOptions();
     await loadStoriesForAdmin();
     return true;
   }
 }
 
-// Khi trạng thái đăng nhập thay đổi
-auth.onAuthStateChanged(async (user) => {
-  if (user) {
-    console.log("Đã đăng nhập:", user.email);
 
-    // Nếu đang ở trang admin.html thì check quyền
-    if (window.location.pathname.includes("admin.html")) {
-      await ensureAdmin(user);
+// Khi trạng thái đăng nhập thay đổi
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    if (page === "admin") {
+      const hasAdminAccess = await ensureAdmin(user);
+      if (hasAdminAccess) {
+        // Chỉ chạy khi user có quyền
+        initAdmin();
+        await loadStoriesForAdmin();
+        await loadStoryOptions();
+        await loadStoryOptionsEdit();
+      }
+      // 
     }
   } else {
-    console.log("Chưa đăng nhập");
-    if (window.location.pathname.includes("admin.html")) {
-      window.location.href = "login.html";
+    if (page === "admin") {
+      window.location.href = "/login.html"; // chưa đăng nhập thì đi login
     }
   }
 });
+
+
 
 
 
@@ -509,6 +567,37 @@ function initAdmin() {
     });
   }
 }
+// ===== Xử lý gửi thư từ Admin =====
+const sendMailBtn = document.getElementById("sendMailBtn");
+if (sendMailBtn) {
+  sendMailBtn.addEventListener("click", async () => {
+    const subject = document.getElementById("mailSubject").value.trim();
+    const body = document.getElementById("mailBody").value.trim();
+
+    // if (!subject || !body) {
+    //   alert("⚠️ Vui lòng nhập đầy đủ tiêu đề và nội dung!");
+    //   return;
+    // }
+
+    try {
+      await addDoc(collection(db, "mails"), {
+        subject,
+        body,
+        createdAt: Date.now(),
+        read: false
+      });
+
+      document.getElementById("mailSubject").value = "";
+      document.getElementById("mailBody").value = "";
+
+      alert("✅ Thư đã được gửi!");
+    } catch (err) {
+      console.error("Lỗi gửi thư:", err);
+      alert("❌ Gửi thư thất bại");
+    }
+  });
+}
+
 
 async function handleCreateStory() {
   const title = $("#storyTitle").value.trim();
@@ -599,29 +688,33 @@ async function loadStoriesForAdmin() {
     div.innerHTML = `
       <strong>${data.title}</strong> 
       <button class="btn btn-edit" data-edit="${docSnap.id}">Sửa</button>
-      <button class="btn btn-delete" data-del="${docSnap.id}">Xóa</button>
     `;
     container.appendChild(div);
   });
-  // Bắt sự kiện Sửa chương
-  container.querySelectorAll(".btn-edit").forEach(btn => {
-    btn.addEventListener("click", e => {
-      const storyId = e.target.dataset.edit;
-      document.getElementById("editChapterSection").hidden = false; // 👈 hiện form sửa
-      loadStoryOptionsEdit(); // load danh sách truyện
-      document.getElementById("storySelectEdit").value = storyId;
-      document.getElementById("storySelectEdit").dispatchEvent(new Event("change"));
-    });
+  document.querySelectorAll(".btn-edit").forEach(btn => {
+  btn.addEventListener("click", e => {
+    const storyId = e.target.dataset.edit;
+    const editSection = document.getElementById("editChapterSection");
+    if (editSection) {
+      editSection.hidden = false;
+    }
+    loadStoryOptionsEdit();
+    const select = document.getElementById("storySelectEdit");
+    if (select) {
+      select.value = storyId;
+      select.dispatchEvent(new Event("change"));
+    }
   });
+});
 }
 
 // Gọi khi vào admin
-if (page === "admin") {
-  initAdmin();
-  loadStoriesForAdmin();
-  loadStoryOptions();
-  loadStoryOptionsEdit();
-}
+// if (page === "admin") {
+//   initAdmin();
+//   loadStoriesForAdmin();
+//   loadStoryOptions();
+//   loadStoryOptionsEdit();
+// }
 
 let editingId = null; // để nhớ ID truyện đang sửa
 
@@ -705,7 +798,7 @@ document.getElementById("saveChapterEditBtn").addEventListener("click", async ()
       content: newContent
     });
 
-    
+
 
     // Show modal
     if (modal && typeof modal.showModal === "function") {
@@ -750,7 +843,7 @@ document.getElementById("deleteBtn").addEventListener("click", async () => {
   try {
     if (chapterId) {
       // Xóa chương
-     if (!(await confirmModal("Bạn có chắc muốn xóa chương này?"))) return;
+      if (!(await confirmModal("Bạn có chắc muốn xóa chương này?"))) return;
 
       await deleteDoc(doc(db, "stories", storyId, "chapters", chapterId));
       showModal("Đã xóa chương");
@@ -793,9 +886,6 @@ document.getElementById("deleteBtn").addEventListener("click", async () => {
   }
 });
 
-
-
-
 async function loadStoryOptions(selectId) {
   const sel = $("#storySelect");
   if (!sel) return;
@@ -808,5 +898,10 @@ async function loadStoryOptions(selectId) {
     sel.appendChild(o);
   });
   if (selectId) sel.value = selectId;
-}
+} 
+
+
+
+
+
 
