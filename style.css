@@ -849,6 +849,110 @@ html[data-theme="light"] #loginLink:focus {
   align-items: center;
   margin-top: 12px;
 }
+.badge {
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-left: 6px;
+}
+/* Modal nền */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Nội dung modal */
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.modal-content h3 {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Danh sách thư */
+.mail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Card thư */
+.mail-item {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.mail-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.mail-item h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: #222;
+}
+
+.mail-item .time {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 6px;
+}
+
+.mail-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #444;
+}
+
+/* Nút đóng */
+#closeMail {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #333;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+#closeMail:hover {
+  background: #555;
+}
+
+/* Hiệu ứng */
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.95);}
+  to {opacity: 1; transform: scale(1);}
+}
+
+
+
+
+
+
 
 
 
