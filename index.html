@@ -93,26 +93,59 @@
           </div>
 
           <!-- Hòm thư -->
-          <button id="mailBtn">
-            📩 Hòm thư <span id="mailBadge" class="badge" style="display:none;">0</span>
-          </button>
-
-          <div id="mailModal" class="modal">
-            <div class="modal-content">
-              <h3>📩 Hòm thư</h3>
-              <div id="mailList"></div>
-              <button id="closeMail">Đóng</button>
-            </div>
-          </div>
-
+<button id="mailBtn">📩 Hòm thư</button>
+<div id="mailModal" class="modal">
+  <div class="modal-content">
+    <h3>📩 Hòm thư</h3>
+    <div class="actions">
+      <button id="deleteAllMails"
+        style="margin-bottom:10px; background:#e74c3c; color:#fff; border:none; padding:5px 10px; border-radius:5px;">
+        🗑️ Xóa tất cả thư
+      </button>
+    </div>
+    <div id="mailList"></div>
+    <button id="closeMail">Đóng</button>
+  </div>
+</div>
           <a href="#" id="aboutBtn">About?</a>
           <a href="#" id="feedbackLink">Feedback</a>
           <button href="#" id="upgradeLink">Nâng cấp Thành Viên</button>
 
         </div>
-      </div>
-    </div>
+       <!-- Modal About -->
+<div id="aboutModal" class="modal">
+  <div class="modal-content">
+    <h3>About</h3>
+    <p>Trang web đọc truyện miễn phí, không quảng cáo.</p>
+    <p>Đội ngũ phát triển TQN</p>
+    <p>Version: 1.0.0</p>
+    <button id="closeAbout">Đóng</button>
+  </div> <!-- ✅ Đóng modal-content -->
+</div> <!-- ✅ Đóng aboutModal -->
+
+<!-- Modal Feedback -->
+<div id="feedbackModal" class="modal">
+  <div class="modal-content">
+    <h3>💬 Feedback</h3>
+    <p>Bạn có thể liên hệ góp ý qua:</p>
+    <ul style="list-style:none; padding:0; text-align:left;">
+      <li>1️⃣ Zalo: <a href="https://zalo.me/0355870037" target="_blank">0355870037</a></li>
+      <li>2️⃣ Email: <a href="mailto:trranquangnha@gmail.com">trranquangnha@gmail.com</a></li>
+    </ul>
+    <button id="closeFeedback" style="margin-top:10px;">Đóng</button>
+  </div>
+</div>
+<!-- Modal Nâng cấp thành viên -->
+<div id="upgradeModal" class="modal">
+  <div class="modal-content">
+    <h3>🚀 Nâng cấp Thành Viên</h3>
+      <p>Chức năng đang phát triển. Vui lòng liên hệ qua Zalo hoặc Email để biết thêm chi tiết.</p>
+    <button id="closeUpgrade" style="margin-top:10px;">Đóng</button>
+  </div>
+</div>
   </header>
+
+
 
   <main class="container">
     <h1>📚 Danh sách truyện</h1>
@@ -164,27 +197,11 @@
         }
       });
     }
-    function renderMailList(snapshot) {
-  const mailList = document.getElementById("mailList");
-  mailList.innerHTML = ""; // clear cũ
-
-  snapshot.forEach(doc => {
-    const mail = doc.data();
-    const time = mail.createdAt?.toDate().toLocaleString() || "Không rõ";
-
-    const item = document.createElement("div");
-    item.className = "mail-item";
-    item.innerHTML = `
-      <h4>${mail.subject || "Không tiêu đề"}</h4>
-      <div class="time">${time}</div>
-      <p>${mail.body || ""}</p>
-    `;
-
-    mailList.appendChild(item);
-  });
-}
-
-
+    // Account
+    document.getElementById("accountBtn").addEventListener("click", () => {
+      const section = document.getElementById("accountSection");
+      section.style.display = section.style.display === "none" ? "block" : "none";
+    });
     // Toggle liên hệ
     document.getElementById("contactToggle").addEventListener("click", () => {
       const list = document.getElementById("contactList");
@@ -210,6 +227,16 @@
     });
     closeFeedback.addEventListener("click", () => {
       feedbackModal.style.display = "none";
+    });
+    // Nâng cấp thành viên
+    const upgradeLink = document.getElementById("upgradeLink");
+    const upgradeModal = document.getElementById("upgradeModal");
+    upgradeLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      upgradeModal.style.display = "flex";
+    });
+    document.getElementById("closeUpgrade").addEventListener("click", () => {
+      upgradeModal.style.display = "none";
     });
   </script>
 
